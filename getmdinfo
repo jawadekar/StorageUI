@@ -1,0 +1,11 @@
+#!/bin/bash
+
+function format_mdstat_for_complete_picture()
+{
+    cat /proc/mdstat | grep md | sed -r 's,\[[0-9]+\],,g' | awk '{
+	for (i=5; i<=NF; i++) {
+	    printf("%s %s\n", $1, $i)
+	}
+    }' | sort
+}
+format_mdstat_for_complete_picture

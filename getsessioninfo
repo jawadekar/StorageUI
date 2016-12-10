@@ -1,0 +1,18 @@
+#!/bin/bash
+
+targ="`echo $1 | awk -F ":" '{print $2}'`"
+
+cat /proc/net/iet/session | 
+    awk -F ":| |\t" -v targ=$targ 'BEGIN {print_flag="false"}
+    {
+	if ($1 == "tid") {
+	    if ($2 == targ) {
+		print_flag="true"
+	    } else {
+		print_flag="false"
+	    }
+	}
+	if (print_flag == "true") {
+	    print $0
+	}
+    }'

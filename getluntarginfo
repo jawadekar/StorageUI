@@ -1,0 +1,22 @@
+#!/bin/bash
+. ./functions.sh
+
+function format_iet_conf_for_complete_picture()
+{
+    display_iet_active_conf | 
+	awk -F ":|-" '{
+	    printf("%s", $NF)
+	    for (i=1; i<NF-1; i++) {
+		printf(":%s", $i)
+	    }
+	    printf("\n")
+	}' | sed 's,/dev/,,g' | 
+	awk -F "/|:" '{
+	    if ( $1 ~ /vg/ ) {
+		printf("%s %s %s:%s:%s:%s\n", $1, $2, $3, $4, $5, $6)
+	    } else {
+		printf("%s %s:%s:%s:%s\n", $1, $2, $3, $4, $5)
+	    }
+	}' | sort
+}
+format_iet_conf_for_complete_picture
